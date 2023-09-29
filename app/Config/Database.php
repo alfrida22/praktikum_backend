@@ -30,6 +30,7 @@ class Database extends Config
         'username'     => '',
         'password'     => '',
         'database'     => 'database-kelasd',
+        'database'     => '',
         'DBDriver'     => 'MySQLi',
         'DBPrefix'     => '',
         'pConnect'     => false,
@@ -82,4 +83,5 @@ class Database extends Config
             $this->defaultGroup = 'tests';
         }
     }
+
 }

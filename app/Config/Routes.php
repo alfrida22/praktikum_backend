@@ -9,3 +9,4 @@ $routes->get('/', 'Home::index');
 $routes->get('insertproducts', 'ProductController::insertProduct');
 $routes->post('insertproducts', 'ProductController::insertProduct');
 $routes->get('products', 'ProductController::readProduct');
+?>

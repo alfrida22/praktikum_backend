@@ -220,7 +220,11 @@
 
     <div class="heroe">
 
+<<<<<<< HEAD
         <h1>Welcome to CodeIgniter <?= CodeIgniter\CodeIgniter::CI_VERSION ?></h1>
+=======
+        <h1>Welcome to CodeIgniter Alfridagit <?= CodeIgniter\CodeIgniter::CI_VERSION ?></h1>
+>>>>>>> b2ba5f752500d2a3eea2bff2d720b050fdcac421
 
         <h2>The small framework with powerful features</h2>
 
