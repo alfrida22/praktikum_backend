@@ -35,6 +35,51 @@ class ProductController extends BaseController {
         }
     }
 
+    public function insertProductApi(){
+        $requestData = $this->request->getJSON();
+        
+        $validation = $this->validate([
+            'nama_product' => 'required',
+            'description' => 'required',
+        ]);
+
+        if (!$validation) {
+            $this->response->setStatuscode(400);
+            return $this->response->setJSON(
+                [
+                'code' => 200,
+                'status' => "BAD REQUEST",
+                'data' => null
+                ]
+            );
+        }
+            
+        $data = [
+            'nama_product' => $requestData->nama_product,
+            'description' => $requestData->description
+        ];
+
+        $insert = $this->product->insertProductORM($data);
+        if ($insert){
+            return $this->respond(
+                [
+                'code' => 200,
+                'status' => "OK",
+                'data' => $data
+            ]
+        );
+        } else{
+            $this->response->setStatuscode(500);
+            return $this->response->setJSON(
+                [
+                    'code' => 500,
+                    'status' => "INTERNAL SERVER ERROR",
+                    'data' => 'null'
+                ]
+            );
+        }
+    }
+
     public function readProduct(){
         $products = $this->product->findAll();
         $data = [
@@ -63,8 +108,6 @@ class ProductController extends BaseController {
         ];
         return view('edit_product', $data);
     }
-
-    
 
     public function getProductApi($id){
         $product = $this->product->where('id', $id)->first();
@@ -99,9 +142,72 @@ class ProductController extends BaseController {
         return redirect()->to(base_url("products"));
     }
 
+    public function updateProductApi($id){
+        // Mengambil data JSON dari request
+    $requestData = $this->request->getJSON();
+
+    // Melakukan validasi terhadap data yang diterima
+    $validation = $this->validate([
+        'nama_product' => 'required',
+        'description' => 'required'
+    ]);
+
+    // Cek apakah validasi berhasil
+    if ($validation) {
+        // Membuat array data yang akan diupdate
+        $data = [
+            'nama_product' => $requestData->nama_product,
+            'description' => $requestData->description,
+        ];
+
+        // Melakukan update data di database menggunakan model
+        $this->product->update($id, $data);
+
+        // Mengambil data yang sudah diupdate
+        $updatedData = $this->product->find($id);
+
+        // Memberikan response JSON sukses
+        return $this->respond([
+            'code' => 200,
+            'status' => 'OK',
+            'data' => $updatedData
+        ]);
+    } else {
+        // Memberikan response JSON untuk kasus validasi gagal
+        return $this->respond([
+            'code' => 400,
+            'status' => 'BAD REQUEST',
+            'data' => null
+        ]);
+    }
+    }
+
     public function deleteProduct($id){
         $this->product->delete($id);
         return redirect()->to(base_url("products"));
+    }
 
+    public function deleteProductApi($id){
+        // Mencari produk berdasarkan ID
+    $product = $this->product->find($id);
+
+    // Jika produk tidak ditemukan, kirim respons 404 Not Found
+    if (!$product) {
+        return $this->respond([
+            'code' => 404,
+            'status' => 'NOT FOUND',
+            'data' => 'Product not found'
+        ]);
+    }
+
+    // Melakukan penghapusan produk dari database
+    $this->product->delete($id);
+
+    // Kirim respons sukses
+    return $this->respond([
+        'code' => 200,
+        'status' => 'OK',
+        'data' => 'Product deleted successfully'
+    ]);
     }
 }
